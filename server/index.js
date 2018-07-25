@@ -1,8 +1,8 @@
 const express = require('express');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const app = express();
+require('./services/passport');
 
-passport.use(new GoogleStrategy());
+const app = express();
+//'require' imports the func in the path. '()' are the args for that func.
+require('./routes/authRoutes')(app);
 
 app.listen(4321);
