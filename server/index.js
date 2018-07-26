@@ -1,8 +1,25 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const keys = require('./config/keys');
+require('./models/User');
 require('./services/passport');
 
+mongoose.connect(keys.mongoURI);
+
 const app = express();
-//'require' imports the func in the path. '()' are the args for that func.
+
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [keys.cookieKey]
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 require('./routes/authRoutes')(app);
 
-app.listen(4321);
+const PORT = process.env.PORT || 4321;
+app.listen(PORT);
