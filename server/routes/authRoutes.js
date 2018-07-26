@@ -18,4 +18,8 @@ module.exports = app => {
         req.logout();
         res.send(req.user);
     });
+
+    // app.get('/create', (req, res) => {
+        
+    // })
 };
