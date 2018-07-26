@@ -23,17 +23,16 @@ passport.use(
             callbackURL: '/auth/google/callback',
         },
         (accessToken, refreshToken, profile, done) => {
-            console.log("profile:/n ", profile);
-            new User({ googleId: profile.id })
-                .save()
-                .then(user => done(null, user));
-            // User.findOne({ googleId: profile.id }).then((existingUser) => {
+            new User({ googleId: profile.id }).save();
+            // console.log("looking into stuff");
+            // User.findOne({ googleId: profile.id }).then(existingUser => {
+            //     console.log("looks interesting");
             //     if (existingUser) {
+            //         console.log("user exists");
             //         done(null, existingUser);
             //     } else {
-            //         new User({ googleId: profile.id })
-            //             .save()
-            //             .then(user => done(null, user));
+            //         console.log("user doesn't exists");
+            //         new User({ googleId: profile.id }).save().then(user => done(null, user));
             //     }
             // });
         }
