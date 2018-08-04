@@ -1,3 +1,4 @@
+//REMEMBER TO REQUIRE IN INDEX.JS
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
