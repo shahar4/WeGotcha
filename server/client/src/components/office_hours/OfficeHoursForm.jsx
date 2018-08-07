@@ -14,7 +14,8 @@ class OfficeHoursForm extends Component {
                         key={field.name}
                         component={OfficeHourFormField}  
                         {...field} 
-                    />);
+                    />
+                );
             })
         );
     }
