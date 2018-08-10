@@ -28,9 +28,7 @@ export const fetchOfficeHoursList = () => async (dispatch) => {
 
 //Update app state to contain new course chosen by student
 export const handleOfficeHoursChoice = choice => {
-    return {
-        type: actionTypes.HANDLE_OH_CHOICE, payload: choice
-    };
+    return { type: actionTypes.HANDLE_OH_CHOICE, payload: choice };
 };
 
 
@@ -59,8 +57,38 @@ export const performStudentAction = (detailsForQueue, history) => async dispatch
 export const checkPlaceInLine = (courseName, studentName) => async (dispatch) => {
     const res = await axios.get('/api/place_in_line', courseName, studentName);
 
+    dispatch({ type: actionTypes.CHECK_PLACE_IN_LINE, payload: res.data });
+};
+
+
+export const updateTaManageOhChoice = choice => {
+        return { type: actionTypes.UPDATE_TA_OH_MANAGE_CHOICE, payload: choice
+        };
+};
+
+
+export const switchTaManagingPageView = () => {
+        return { type: actionTypes.SWITCH_TA_MANAGING_PAGE_VIEW,
+        };
+};
+
+
+//Take course_name and student _id and delete student from course' queue
+export const removeStudentFromQueue = (courseName, studentId) => async dispatch => {
+    const res = await axios.post('/api/office_hours/remove_student', courseName, studentId);
+
     dispatch({
-        type: actionTypes.CHECK_PLACE_IN_LINE,
+        type: actionTypes.REMOVE_STUDENT_FROM_QUEUE,
+        payload: res.data
+    });
+};
+
+//Take course_name and update the advancement status of the queue
+export const updateQueueStatus = (course) => async dispatch => {
+    const res = await axios.post('/api/office_hours/update_status', course);
+
+    dispatch({
+        type: actionTypes.UPDATE_QUEUE_STATUS,
         payload: res.data
     });
 };

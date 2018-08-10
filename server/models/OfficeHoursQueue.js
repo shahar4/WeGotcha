@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 
 const OHQueueSchema = new Schema({
     student_name: String,
+    array_location: Number,
     // topics: String,
 });
 

@@ -9,16 +9,16 @@ import NewOfficeHours from './office_hours/NewOfficeHours';
 import OfficeHoursCreated from './office_hours/OfficeHoursCreated';
 import ChooseOfficeHours from './students/ChooseOfficeHours';
 import JoinedQueue from './students/JoinedQueue';
+import TAOptions from './TAs/TAOptions';
+import ManageOfficeHours from './TAs/ManageOfficeHours';
 
 const Dashboard = () => <h2>Flumpert</h2>;
 
 class App extends Component {
+
   componentDidMount() {
     this.props.fetchUser();
     this.props.fetchOfficeHoursList();
-    if (this.props.courseName) {
-      this.props.checkPlaceInLine(this.props.courseName, this.props.studentName);
-    }
   }
 
   render() {
@@ -29,10 +29,12 @@ class App extends Component {
             <Header />
             <Route exact path="/" component={Dashboard} />
             <Route exact path="/chooseHat" component={ChooseHat} />
-            <Route exact path="/office_hours/new" component={NewOfficeHours} />
+            <Route exact path="/ta/office_hours/new" component={NewOfficeHours} />
             <Route exact path="/office_hours/created" component={OfficeHoursCreated} />
             <Route exact path="/students/choose_office_hours" component={ChooseOfficeHours} />
             <Route exact path="/students/queue_joined" component={JoinedQueue} />
+            <Route exact path="/ta/options" component={TAOptions} />
+            <Route exact path="/ta/office_hours/manage" component={ManageOfficeHours} />
           </div>
         </BrowserRouter>
       </div>
@@ -43,8 +45,8 @@ class App extends Component {
 function mapStateToProps(state) {
   return { 
     studentName: state.activeUser ? state.activeUser.name.givenName : '',
-    courseName: state.chosenOfficeHourName.value,
+    course: state.activeUser ? state.activeUser.office_hours_joined : '',
   };
 }
 
-export default connect(null, actions)(App);
+export default connect(mapStateToProps, actions)(App);

@@ -8,8 +8,8 @@ import * as actions from '../../actions';
 import { JOIN_QUEUE, SEE_QUEUE } from '../../constants';
 import OfficeHourFormField from '../office_hours/OfficeHourFormField';
 
-const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoice, 
-    handleStudentActionChoice, selectedStudentAction, performStudentAction, currentStudent, history }) => {
+const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoice, handleStudentActionChoice,
+    selectedStudentAction, performStudentAction, currentStudent, studentAction, history }) => {
         
     const officeHoursOptions = _.map(officeHoursList, course => {
         return (
@@ -30,26 +30,36 @@ const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoic
     };
 
     return (
-        <div className="container center" style={{ width: '420px', marginTop: '30px', }}>
+        <div className="container center" style={{ width: '420px', marginTop: '60px', }}>
             <h5 style={{ color: '#9e9e9e' }}> Choose your office hours: </h5>
             <div style={{ marginTop: '20px' }}>
-                <Select
-                    value={selectedOH}
-                    onChange={selection => handleOfficeHoursChoice(selection)}
-                    options={officeHoursOptions}
-                />
-                <Select
-                    value={selectedStudentAction}
-                    onChange={selection => handleStudentActionChoice(selection)}
-                    options={doWhatOptions}
-                />
-                <Field
-                    component={OfficeHourFormField}
-                    name='questions_topics'
-                    label='Topics'
-                    type='text'
-                    noValErro='Please enter topics for your questions'
-                />
+                <div style={{ marginBottom: '40px' }}>
+                    <Select
+                        value={selectedOH}
+                        onChange={selection => handleOfficeHoursChoice(selection)}
+                        options={officeHoursOptions}
+                    />
+                </div>
+                <h5 style={{ color: '#9e9e9e' }}> What do you want to do with them? </h5>
+                <div style={{ marginBottom: '40px' }}>
+                    <Select
+                        value={selectedStudentAction}
+                        onChange={selection => handleStudentActionChoice(selection)}
+                        options={doWhatOptions}
+                    />
+                </div>
+                {studentAction === JOIN_QUEUE &&
+                    <div>
+                        <h5 style={{ color: '#9e9e9e' }}> Want to share question topics? </h5>
+                        <Field
+                            component={OfficeHourFormField}
+                            name='questions_topics'
+                            type='text'
+                            examples='midterm prep, HW#6...'
+                            noValErro='Please enter topics for your questions'
+                        />
+                    </div>
+                }
                 <button 
                     className="btn-flat white-text center"
                     style={{backgroundColor: '#C4D8E2', width: '160px'}}
@@ -72,6 +82,7 @@ function mapStateToProps(state) {
             name: state.activeUser ? state.activeUser.name.givenName + ' ' + state.activeUser.name.familyName : '',
             googleId: state.activeUser ? state.activeUser.googleId : '',
         },
+        studentAction: state.selectedStudentAction.label,
     };
 }
 

@@ -40,7 +40,15 @@ const OfficeHoursFormReview = ({ onReviewBack, formValues, submitOfficeHours, hi
 };
 
 function mapStateToProps(state) {
-    return { formValues: state.form.newOfficeHourForm.values }; 
+    return { 
+        formValues: { 
+            ...state.form.newOfficeHourForm.values, 
+            ta: { 
+                name: state.activeUser ? state.activeUser.name.givenName + ' ' + state.activeUser.name.familyName : '',
+                googleId: state.activeUser ? state.activeUser.googleId : '',
+            },
+        } 
+    }; 
 }
 
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const buttonStyle = { width: '200px', backgroundColor: '#C4D8E2' };
+const buttonStyle = { width: '200px', backgroundColor: '#C4D8E2', fontSize: '1.23em' };
 
 class ChooseHat extends Component {
     render() {
@@ -18,7 +18,7 @@ class ChooseHat extends Component {
                             STUDENT
                         </Link>
                         <Link 
-                            to={'/office_hours/new'}
+                            to={'/ta/options'}
                             className="waves-effect waves-light btn-large left" 
                             style={buttonStyle}> 
                             TA 

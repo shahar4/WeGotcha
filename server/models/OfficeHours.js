@@ -4,7 +4,7 @@ const OHQueueSchema = require('./OfficeHoursQueue');
 
 const officeHourSchema = new Schema({
     course_name: String,
-    ta_name: String,
+    ta: { name: String, googleId: String },
     date: { type: Date, default: Date.now },
     times: String,
     location: String,
