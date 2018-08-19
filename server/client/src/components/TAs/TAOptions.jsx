@@ -9,11 +9,11 @@ class ChooseHat extends Component {
         return (
             <div className="container center-align" style={{ marginTop: '120px', color: '#9e9e9e', width: '660px' }}>
                 <div className="row">
-                    <h3 className="col s12" style={{ marginBottom: '30px' }}>
+                    <h4 className="col s12" style={{ marginBottom: '30px' }}>
                         Hey, {this.props.activeTA}!
                         <br/>
                         How can we assist you today? 
-                    </h3>
+                    </h4>
                     <div>
                         <Link
                             to={'/ta/office_hours/new'}

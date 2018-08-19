@@ -5,8 +5,9 @@ import ShowAndManageQueue from './ShowAndManageQueue';
 
 class ManageOfficeHours extends Component {
     render() {
+        const marginTop = this.props.whatToShow === 'chooseOh' ? '100px' : '40px';
         return (
-            <div className="container center-align" style={{ marginTop: '120px', color: '#9e9e9e', width: '660px' }}>
+            <div className="container center-align" style={{ marginTop, color: '#9e9e9e', width: '660px' }}>
                 {
                     this.props.whatToShow === 'chooseOh' && <ChooseOHToManage />
                 }

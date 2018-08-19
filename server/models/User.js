@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   googleId: String,
   name: { familyName: String, givenName: String },
-  office_hours_joined: { course_name: String, array_location: Number },
+  uni: String,
+  officeHoursJoined: { course_name: String, array_location: Number },
 });
 
 mongoose.model('users', userSchema);

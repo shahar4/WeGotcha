@@ -21,11 +21,14 @@ class OfficeHoursForm extends Component {
     }
 
     render() {
+        let date = new Date();
         return (
             <div className="container center-align" style={{marginTop: '30px', paddingBottom:'20px', width:'420px'}}>
                 <form onSubmit={this.props.handleSubmit(this.props.onFormSubmit)}>
                     <div style={{ fontSize: '1rem' }}>
                         {this.renderFields()}
+                    </div>
+                    <div style={{width:'100%', marginBottom:'30px'}}>
                     </div>
                     <button type="submit" className="btn-flat white-text right" style={{backgroundColor: '#C4D8E2', width: '160px' }}> 
                         NEXT

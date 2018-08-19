@@ -31,13 +31,14 @@ module.exports = app => {
 
     app.post('/api/student_join_queue', requireLogin, async (req, res) => {
         //TODO: make it so you only register for a queue in that same date (and only 15 mins before OH have started)
-        const { studentName, courseName, studentId } = req.body; 
+        const { studentName, courseName, studentGoogleId, topics } = req.body;
 
         const officeHours = await OfficeHours.findOne({ course_name: courseName });
-        officeHours.queue.push({ student_name: studentName });
+        officeHours.queue.push({ student_name: studentName, studentGoogleId: studentGoogleId, topics: topics });
+        console.log(officeHours);
 
-        const user = await User.findOne({ googleId: studentId });
-        user.office_hours_joined = { course_name: courseName, array_location: officeHours.__v};
+        const user = await User.findOne({ googleId: studentGoogleId });
+        user.officeHoursJoined = { course_name: courseName, array_location: officeHours.queue.length-1};
 
         try {
             await officeHours.save();
@@ -62,40 +63,39 @@ module.exports = app => {
     });
 
 
-    app.post('/api/office_hours/remove_student', requireLogin, async (req, res) => {
+    app.post('/api/office_hours/remove_student_from_queue', requireLogin, async (req, res) => {
         /* 
          * TODO:
          ** WHEN YOU REMOVE A STUDENT YOU NEED TO:
          *** 1. REMOVE HIM FROM THE OH.QUEUE IN THE DB
          *** 2. FOR ALL THE ONES AFTER HIM: UPDATE THEIR ARRAY_LOCATION
          */
-        const { courseName, studentId } = req.body;
+        const { courseName, studentIdInQueue } = req.body;
 
-        const officeHours = await OfficeHours.findOne({
-            course_name: courseName
-        });
-        _.forEach(officeHours.queue, (student) => {
-            if(student._id === studentId) {
+        const officeHours = await OfficeHours.findOne({ course_name: courseName });
+        const queue = officeHours.queue;
 
+        let i;
+        let itemFound = false;
+        //TODO: EDGE CASE FOR WHEN THE QUEUE ONLY HAS ONE USER --> I<QUEUE.LENGTH TODO://
+        for(i=0; i<queue.length-1; i++) {
+            if (queue[i].studentGoogleId === studentIdInQueue) {
+                itemFound = true;
             }
-        })
-
-        const user = await User.findOne({
-            googleId: studentId
-        });
-        user.office_hours_joined = {
-            course_name: courseName,
-            array_location: officeHours.__v
-        };
-
-        try {
-            await officeHours.save();
-            await user.save();
-        } catch (err) {
-            res.status(422).send(err);
+            if (itemFound) {
+                officeHours.queue[i] = officeHours.queue[i+1];
+                // const user = await User.findOne({ googleId: studentId });
+            }
         }
+        //TODO: MAKE SURE THAT ONLY PEOPLE WHO ARE IN THE QUEUE CAN SEE THE LEAVE QUEUE BUTTON TODO://
+        officeHours.queue.pop();
 
-        req.body.arrayLocation = officeHours.__v;
+        const user = await User.findOne({ googleId: studentIdInQueue });
+        user.officeHoursJoined = {};
+
+        try { await officeHours.save(); await user.save(); }
+        catch (err) { res.status(422).send(err); }
+
         res.send(req.body);
     });
 
@@ -117,12 +117,8 @@ module.exports = app => {
         const list = await OfficeHours.find();
         res.send(list);
     });
+
+    app.get('/api/student/fetch_oh_joind', (req, res) => {
+        res.send(req.user.officeHoursJoined);
+    });
 };
-
-
-// /api/student/see_queue
-
-        // OfficeHours.findOne(query, (err, OH) => {
-        //     OH.queue = [...OH.queue, {student_name: studentName }]
-        //     OH.save();
-        // });

@@ -1,4 +1,3 @@
-// Says 
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -22,14 +21,17 @@ class JoinedQueue extends Component {
 
 function mapStateToProps(state) {
     let findingCurrentQueueHead;
-    _.forEach(state.office_hours_list, OH => {
-        if (OH.course_name === state.activeUser.office_hours_joined.course_name) {
+    const chosenOh = state.student.ohJoined ? state.student.ohJoined.course_name : state.student.ohNotSelectedYet ? state.student.ohNotSelectedYet.chosenOh.value : '';
+    
+    _.forEach(state.officeHoursList, OH => {
+        if (OH.course_name === chosenOh) {
             findingCurrentQueueHead = OH.next_in_line;
         }
     })
+
     return {
-        studentName: state.activeUser ? state.activeUser.name.givenName : '',//TODO: take only first name, cap first letter.
-        studentLocationInArray: state.activeUser ? state.activeUser.office_hours_joined.array_location : '',
+        studentName: state.activeUser ? state.activeUser.name.givenName : '',
+        studentLocationInArray: state.activeUser ? state.activeUser.officeHoursJoined.array_location : '',
         currentQueueHead: findingCurrentQueueHead,
     };
 }

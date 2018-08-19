@@ -6,7 +6,7 @@ export default function(state = [], action) {
     case SUBMIT_OFFICE_HOURS:
       return action.payload;
     
-    case FETCH_OFFICE_HOURS_LIST:{
+    case FETCH_OFFICE_HOURS_LIST: {
       return action.payload;
     }
 

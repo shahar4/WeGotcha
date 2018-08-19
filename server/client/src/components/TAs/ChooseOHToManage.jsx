@@ -27,6 +27,7 @@ class ChooseOHToManage extends Component {
                             value={this.props.value}
                             onChange={selection => this.props.updateTaManageOhChoice(selection)}
                             options={taOhOptions}
+                            //TODO: SET NO VALUE OPTIONS FOR 'YOU DIDN'T SET OH YET
                         />
                     </div>
                     <button 
@@ -44,7 +45,7 @@ class ChooseOHToManage extends Component {
 
 function mapStateToProps(state) {
     return {
-        allOficeHours: state.office_hours_list || '',
+        allOficeHours: state.officeHoursList || '',
         activeTaId: state.activeUser ? state.activeUser.googleId : '',
         taManageOhChoice: state.taManageOhChoice || '',
     };

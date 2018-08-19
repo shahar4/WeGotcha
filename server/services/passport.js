@@ -1,3 +1,8 @@
+/* TODO: 
+ * VERIFY THAT THEY ARE FROM COLUMBIA 
+ ** profile.domain should be -  'columbia.edu'
+ */
+
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose');
@@ -16,8 +21,7 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
-  new GoogleStrategy(
-    {
+  new GoogleStrategy({
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
       callbackURL: '/auth/google/callback',
@@ -29,7 +33,7 @@ passport.use(
       if (existingUser) {
         return done(null, existingUser);
       }
-
+      
       const user = await new User(
         {
           googleId: profile.id,

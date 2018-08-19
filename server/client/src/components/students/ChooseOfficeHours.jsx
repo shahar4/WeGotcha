@@ -8,8 +8,8 @@ import * as actions from '../../actions';
 import { JOIN_QUEUE, SEE_QUEUE } from '../../constants';
 import OfficeHourFormField from '../office_hours/OfficeHourFormField';
 
-const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoice, handleStudentActionChoice,
-    selectedStudentAction, performStudentAction, currentStudent, studentAction, history }) => {
+const ChooseOfficeHours = ({ studentName, officeHoursList, selectedOH, updateStudentChoiceOfOh, updateStudentGoal,
+    selectedStudentAction, performStudentAction, fetchOfficeHoursList, currentStudent, studentAction, topics, history }) => {
         
     const officeHoursOptions = _.map(officeHoursList, course => {
         return (
@@ -26,17 +26,22 @@ const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoic
         courseName: selectedOH.value,
         studentAction: selectedStudentAction.value,
         studentName: currentStudent.name,
-        studentId: currentStudent.googleId,
+        studentGoogleId: currentStudent.googleId,
+        topics: topics
     };
 
     return (
         <div className="container center" style={{ width: '420px', marginTop: '60px', }}>
-            <h5 style={{ color: '#9e9e9e' }}> Choose your office hours: </h5>
+            <h5 style={{ color: '#9e9e9e' }}>
+                Hey, {studentName}!
+                <br /><br />
+                Choose your office hours:
+            </h5>
             <div style={{ marginTop: '20px' }}>
                 <div style={{ marginBottom: '40px' }}>
                     <Select
                         value={selectedOH}
-                        onChange={selection => handleOfficeHoursChoice(selection)}
+                        onChange={selection => updateStudentChoiceOfOh(selection)}
                         options={officeHoursOptions}
                     />
                 </div>
@@ -44,7 +49,7 @@ const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoic
                 <div style={{ marginBottom: '40px' }}>
                     <Select
                         value={selectedStudentAction}
-                        onChange={selection => handleStudentActionChoice(selection)}
+                        onChange={selection => updateStudentGoal(selection)}
                         options={doWhatOptions}
                     />
                 </div>
@@ -63,7 +68,10 @@ const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoic
                 <button 
                     className="btn-flat white-text center"
                     style={{backgroundColor: '#C4D8E2', width: '160px'}}
-                    onClick={() => performStudentAction(detailsForQueue, history)}
+                    onClick={() => {
+                        performStudentAction(detailsForQueue, history);
+                        fetchOfficeHoursList();
+                    }}
                 >
                     SUBMIT
                     <i className="material-icons right \">add</i>
@@ -75,17 +83,21 @@ const ChooseOfficeHours = ({ officeHoursList, selectedOH, handleOfficeHoursChoic
 
 function mapStateToProps(state) {
     return { 
-        officeHoursList: state.office_hours_list,
-        selectedOH: state.chosenOfficeHourName,
-        selectedStudentAction: state.selectedStudentAction,
+        officeHoursList: state.officeHoursList,
+        selectedOH: state.student.ohNotSelectedYet ? state.student.ohNotSelectedYet.chosenOh : '',
+        selectedStudentAction: state.student.goal,
         currentStudent: {
             name: state.activeUser ? state.activeUser.name.givenName + ' ' + state.activeUser.name.familyName : '',
             googleId: state.activeUser ? state.activeUser.googleId : '',
         },
-        studentAction: state.selectedStudentAction.label,
+        studentAction: state.student.goal.label,
+        topics: state.form.enterOHQueueForm ? 
+            state.form.enterOHQueueForm.values ? state.form.enterOHQueueForm.values.questions_topics : '' : '',
+        studentName: state.activeUser ? state.activeUser.name.givenName : '',
     };
 }
 
 export default reduxForm({
     form: 'enterOHQueueForm',
+    destroyOnUnmount: false,
 })(connect(mapStateToProps, actions)(withRouter(ChooseOfficeHours)));

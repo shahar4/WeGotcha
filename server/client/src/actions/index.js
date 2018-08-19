@@ -27,29 +27,31 @@ export const fetchOfficeHoursList = () => async (dispatch) => {
 
 
 //Update app state to contain new course chosen by student
-export const handleOfficeHoursChoice = choice => {
-    return { type: actionTypes.HANDLE_OH_CHOICE, payload: choice };
+export const updateStudentChoiceOfOh = choice => {
+    return { type: actionTypes.UPDATE_STUDENT_CHOICE_OF_OF, payload: choice };
 };
 
 
 //Update app state to contain new student action
-export const handleStudentActionChoice = studentAction => {
-    return {
-        type: actionTypes.HANDLE_STUDENT_ACTION, payload: studentAction
-    };
+export const updateStudentGoal = studentAction => {
+    return { type: actionTypes.UPDATE_STUDENT_GOAL, payload: studentAction };
 };
 
 
 //Ask BE to do whatever the student wanted with the selected course
 export const performStudentAction = (detailsForQueue, history) => async dispatch => {
-    const res = detailsForQueue.studentAction === JOIN_QUEUE ?
-        await axios.post('/api/student_join_queue', detailsForQueue):
-            await axios.post('/api/student/see_queue', detailsForQueue);
-
-    history.push('/students/queue_joined');
+    let res;
+    let payloadInfo = {};
+    
+    if (detailsForQueue.studentAction === JOIN_QUEUE) {
+        res = await axios.post('/api/student_join_queue', detailsForQueue);
+        payloadInfo = { studentName: res.data.studentName, arrayLocation: res.data.arrayLocation }
+    }
+    
+    history.push('/students/see_queue');
     dispatch({
         type: actionTypes.PERFORM_STUDENT_ACTION,
-        payload: { studentName: res.data.studentName, arrayLocation: res.data.arrayLocation }
+        payload: payloadInfo
     });
 };
 
@@ -62,33 +64,53 @@ export const checkPlaceInLine = (courseName, studentName) => async (dispatch) =>
 
 
 export const updateTaManageOhChoice = choice => {
-        return { type: actionTypes.UPDATE_TA_OH_MANAGE_CHOICE, payload: choice
-        };
+    return { type: actionTypes.UPDATE_TA_OH_MANAGE_CHOICE, payload: choice };
 };
 
 
 export const switchTaManagingPageView = () => {
-        return { type: actionTypes.SWITCH_TA_MANAGING_PAGE_VIEW,
-        };
-};
-
-
-//Take course_name and student _id and delete student from course' queue
-export const removeStudentFromQueue = (courseName, studentId) => async dispatch => {
-    const res = await axios.post('/api/office_hours/remove_student', courseName, studentId);
-
-    dispatch({
-        type: actionTypes.REMOVE_STUDENT_FROM_QUEUE,
-        payload: res.data
-    });
+    return { type: actionTypes.SWITCH_TA_MANAGING_PAGE_VIEW,};
 };
 
 //Take course_name and update the advancement status of the queue
-export const updateQueueStatus = (course) => async dispatch => {
+export const updateQueueStatus = course => async dispatch => {
     const res = await axios.post('/api/office_hours/update_status', course);
 
-    dispatch({
-        type: actionTypes.UPDATE_QUEUE_STATUS,
-        payload: res.data
-    });
+    dispatch({ type: actionTypes.UPDATE_QUEUE_STATUS,  payload: res.data });
+};
+
+//SWITCH STATE THAT DETERMINES SHOW OR HIDE OF ANSWERWED STUDENTS IN STUDENT'S QUEUE
+export const changeDisplayInStudentsQueue = () => {
+    return { type: actionTypes.CHANGE_DISPLAY_IN_STUDENTS_QUEUE };
+};
+
+
+//FETCH OH THE ACTIVE USER WHO IS A STUDENT JOINED
+export const fetchStudentOhJoind = () => async (dispatch) => {
+    const res = await axios.get('/api/student/fetch_oh_joind');
+
+    dispatch({ type: actionTypes.FETCH_STUDENT_OH_JOINED, payload: res.data });
+};
+
+
+//SET USER'S HAT TO STUDENT/TA
+export const setUserHat = (hat, didJoinOh, history) => {
+    let newUrl;
+
+    if (hat === 'student') {
+        newUrl = didJoinOh ? 'students/see_queue' : 'students/choose_office_hours';
+    } else {
+        newUrl = 'ta/options';
+    }
+    history.push(newUrl);
+    return { type: actionTypes.SET_USER_HAT, payload: hat };
+};
+
+
+//Takes in student's id and course id, removes students from DB and changes the state
+export const removeStudentFromQueue = (courseName, studentIdInQueue) => async dispatch => {
+    const values = { courseName, studentIdInQueue };
+    const res = await axios.post('/api/office_hours/remove_student_from_queue', values);
+
+    dispatch({ type: actionTypes.REMOVE_STUDENT_FROM_QUEUE, payload: res.data });
 };

@@ -4,17 +4,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
 class ManageOfficeHours extends Component {
-    /*TODO:
-     ** HIGHLIGHT THE CURRENT ACTIVE USER
-     ** PRESENT A PAGE ALSO IF NOBODY SHOWED UP
-     ** 
-     */
     render() {
         let lineIsAt = 0;
-        const listItems = this.props.queue.map(student => 
-        {
+        const listItems = this.props.course.queue.map(student => {
             const backgroundColor = lineIsAt < this.props.course.next_in_line ? '#F8F8F8' : '#FFFFFF';
-            console.log(lineIsAt, this.props.course.next_in_line)
             lineIsAt += 1;
             return (
                 <li className="collection-item avatar" key={student._id} style={{ backgroundColor: backgroundColor}}>
@@ -35,8 +28,9 @@ class ManageOfficeHours extends Component {
                         </span>
                         <br/>
                         <span 
+                            className="left" 
                             style={{ fontWeight: 'bold' }}
-                            > Topics: Flumpert, Numpert 
+                        > {student.topics ? 'Topics: ' + student.topics : ''} 
                         </span>
                     </div>
                     <div className="secondary-content">
@@ -56,7 +50,9 @@ class ManageOfficeHours extends Component {
             )}
         );
         return (
-            <ul className="collection">
+            <ul className="collection" style={{ height: '534px', overflow: 'scroll'}}>
+                {this.props.course.queue.length === 0 &&
+                    <h4>Nobody signed up yet. <br/> We're sure they will come pouring!</h4> }
                 {listItems}
             </ul>
         );
@@ -65,18 +61,13 @@ class ManageOfficeHours extends Component {
 
 function mapStateToProps(state) {
     let chosenOh;
-    _.forEach(state.office_hours_list, OH => {
+    _.forEach(state.officeHoursList, OH => {
         if (OH.course_name === state.taManageOhChoice.value) {
             chosenOh = OH;
         }
     })
 
     return {
-        queue: chosenOh.queue,
-        nextInLine: chosenOh.next_in_line,
-        date: chosenOh.date,
-        times: chosenOh.times,
-        courseName: chosenOh.course_name,
         course: chosenOh
     };
 }
