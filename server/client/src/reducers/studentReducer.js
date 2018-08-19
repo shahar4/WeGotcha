@@ -1,4 +1,4 @@
-import { CHANGE_DISPLAY_IN_STUDENTS_QUEUE, UPDATE_STUDENT_GOAL, FETCH_STUDENT_OH_JOINED, UPDATE_STUDENT_CHOICE_OF_OF, REMOVE_STUDENT_FROM_QUEUE } from '../actions/types';
+import { CHANGE_DISPLAY_IN_STUDENTS_QUEUE, UPDATE_STUDENT_GOAL, FETCH_STUDENT_OH_JOINED, UPDATE_STUDENT_CHOICE_OF_OH, REMOVE_STUDENT_FROM_QUEUE } from '../actions/types';
 import { SEE_QUEUE } from '../constants';
 
 /*
@@ -48,7 +48,7 @@ export default function (state = initialState, action) {
         };
     }
 
-    case UPDATE_STUDENT_CHOICE_OF_OF: {
+    case UPDATE_STUDENT_CHOICE_OF_OH: {
         return {
             ohJoined: state.ohJoined,
             goal: state.ohJoined ? 'queueJoined' : state.goal,

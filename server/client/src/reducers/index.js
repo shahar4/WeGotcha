@@ -9,6 +9,7 @@ import switchTaManagingPageView from './taManagingPageViewReducer';
 import changeDisplayInStudentsQueue from './studentsQueueReducer';
 import studentReducer from './studentReducer';
 import hatReducer from './hatReducer';
+import newOhReducer from './newOhReducer';
 
 export default combineReducers({
     activeUser: fetchUser,
@@ -21,4 +22,5 @@ export default combineReducers({
     showInTaManagePage: switchTaManagingPageView,
     studentsQueue: changeDisplayInStudentsQueue,
     student: studentReducer,
+    newOh: newOhReducer,
 });

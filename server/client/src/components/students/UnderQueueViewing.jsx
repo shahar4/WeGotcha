@@ -22,7 +22,7 @@ const UnderQueueViewing = ({ updateStudentGoal, studentAction, howManyInLine, mi
 
     const joinQueueSelectorValue = { value: JOIN_QUEUE, label: JOIN_QUEUE };
     const seeOtherOhsValue = 'seeOtherOhs';
-    console.log(studentAction);
+
     return (
         <div className="center">
             <h5 style={{ color: '#9e9e9e' }}>
@@ -71,7 +71,6 @@ const UnderQueueViewing = ({ updateStudentGoal, studentAction, howManyInLine, mi
                         className="btn-flat white-text center"
                         style={{backgroundColor: '#C4D8E2', width: '160px'}}
                         onClick={() => {
-                            console.log("hurray!");
                             // performStudentAction(detailsForQueue, history);
                             // fetchOfficeHoursList();
                         }}

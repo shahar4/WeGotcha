@@ -1,9 +1,12 @@
 import _ from 'lodash';
+import * as actions from '../../actions';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import { Link } from 'react-router-dom';
 import { FORM_FIELDS } from '../../constants';
 import OfficeHourFormField from './OfficeHourFormField';
+import DateTimePicker from 'react-datetime-picker';
 
 class OfficeHoursForm extends Component {
     renderFields() {
@@ -29,6 +32,12 @@ class OfficeHoursForm extends Component {
                         {this.renderFields()}
                     </div>
                     <div style={{width:'100%', marginBottom:'30px'}}>
+                        <DateTimePicker
+                            onChange={(selection) => this.props.updateTaDateTimeForNewOh(selection)}
+                            value={this.props.dateTime}
+                            locale={"en-US"}
+                            showLeadingZeros={true}
+                        />
                     </div>
                     <button type="submit" className="btn-flat white-text right" style={{backgroundColor: '#C4D8E2', width: '160px' }}> 
                         NEXT
@@ -56,8 +65,15 @@ function validate(values) {
     return errors;
 }
 
+function mapStateToProps(state) {
+    return {
+        dateTime: state.newOh.dateTime
+    };
+}
+
 export default reduxForm({
     validate,
     form: 'newOfficeHourForm',
     destroyOnUnmount: false,
-})(OfficeHoursForm);
+})(connect(mapStateToProps, actions)(OfficeHoursForm));
+

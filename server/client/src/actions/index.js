@@ -28,7 +28,7 @@ export const fetchOfficeHoursList = () => async (dispatch) => {
 
 //Update app state to contain new course chosen by student
 export const updateStudentChoiceOfOh = choice => {
-    return { type: actionTypes.UPDATE_STUDENT_CHOICE_OF_OF, payload: choice };
+    return { type: actionTypes.UPDATE_STUDENT_CHOICE_OF_OH, payload: choice };
 };
 
 
@@ -113,4 +113,11 @@ export const removeStudentFromQueue = (courseName, studentIdInQueue) => async di
     const res = await axios.post('/api/office_hours/remove_student_from_queue', values);
 
     dispatch({ type: actionTypes.REMOVE_STUDENT_FROM_QUEUE, payload: res.data });
+};
+
+
+//Update TA's choice of date & time for the new OH
+export const updateTaDateTimeForNewOh = newDateTime => {
+    console.log(newDateTime);
+    return { type: actionTypes.UPDATE_TA_DATE_TIME_FOR_NEW_OH, payload: newDateTime };
 };

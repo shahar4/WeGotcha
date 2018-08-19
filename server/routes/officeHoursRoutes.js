@@ -35,7 +35,6 @@ module.exports = app => {
 
         const officeHours = await OfficeHours.findOne({ course_name: courseName });
         officeHours.queue.push({ student_name: studentName, studentGoogleId: studentGoogleId, topics: topics });
-        console.log(officeHours);
 
         const user = await User.findOne({ googleId: studentGoogleId });
         user.officeHoursJoined = { course_name: courseName, array_location: officeHours.queue.length-1};
