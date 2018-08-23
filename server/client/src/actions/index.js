@@ -11,11 +11,11 @@ export const fetchUser = () => async (dispatch) => {
 
 
 //Takes all the vals filled in from the OfficeHoursFormReview component and asks BE to store in db
-export const submitOfficeHours = (values, history) => async dispatch => {
-    const res = await axios.post('/api/office_hours', values);
-
+export const createNewOh = (values, history) => async dispatch => {
+    const res = await axios.post('/api/office_hours/create', values);
+    
     history.push('/office_hours/created');
-    dispatch({ type: actionTypes.SUBMIT_OFFICE_HOURS, payload: res.data });
+    dispatch({ type: actionTypes.CREATE_NEW_OH, payload: res.data });
 };
 
 
@@ -79,9 +79,16 @@ export const updateQueueStatus = course => async dispatch => {
     dispatch({ type: actionTypes.UPDATE_QUEUE_STATUS,  payload: res.data });
 };
 
+
 //SWITCH STATE THAT DETERMINES SHOW OR HIDE OF ANSWERWED STUDENTS IN STUDENT'S QUEUE
 export const changeDisplayInStudentsQueue = () => {
     return { type: actionTypes.CHANGE_DISPLAY_IN_STUDENTS_QUEUE };
+};
+
+
+//SWITCH STATE THAT DETERMINES SHOW OR HIDE OF ANSWERWED STUDENTS IN TA'S QUEUE
+export const changeDisplayInTaQueue = () => {
+    return { type: actionTypes.CHANGE_DISPLAY_IN_TA_QUEUE };
 };
 
 
@@ -116,8 +123,30 @@ export const removeStudentFromQueue = (courseName, studentIdInQueue) => async di
 };
 
 
-//Update TA's choice of date & time for the new OH
-export const updateTaDateTimeForNewOh = newDateTime => {
-    console.log(newDateTime);
-    return { type: actionTypes.UPDATE_TA_DATE_TIME_FOR_NEW_OH, payload: newDateTime };
+//Update TA's values for the new OH
+export const updateNewOhValues = (value, whichDetail) => {
+    switch(whichDetail){
+        case 'course_name': {
+            return { type: actionTypes.UPDATE_NEW_OH_COURSE_NAME, payload: value };
+        }
+        case 'location': {
+            return { type: actionTypes.UPDATE_NEW_OH_LOCATION, payload: value };
+        }
+        case 'notes': {
+            return { type: actionTypes.UPDATE_NEW_OH_NOTES, payload: value };
+        }
+        case 'date': {
+            return { type: actionTypes.UPDATE_NEW_OH_DATE, payload: value };
+        }
+        case 'startTime': {
+            return { type: actionTypes.UPDATE_NEW_OH_START_TIME, payload: value };
+        }
+        case 'endTime': {
+            return { type: actionTypes.UPDATE_NEW_OH_END_TIME, payload: value };
+        }
+        default: {
+            return;
+        }
+    }
+    
 };

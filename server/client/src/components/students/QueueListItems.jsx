@@ -11,11 +11,13 @@ const QueueListItems = ({ course, displayAnsweredStudents }) => {
         } else {
             return (
                 <li className="collection-item avatar" key={student._id} style={{ backgroundColor }}>
-                    {lineIsAt++ === course.next_in_line && <span
-                        className="right"
-                        style={{ color: '#AF0000', fontWeight: 'bold' }}
-                    > * Up Next *
-                            </span>}
+                    {lineIsAt++ === course.next_in_line && 
+                        <span
+                            className="right"
+                            style={{ color: '#AF0000', fontWeight: 'bold' }}
+                        >* Up Next *
+                        </span>
+                    }
                     <i className="material-icons circle" style={{ backgroundColor: '#C4D8E2', fontSize: '30px' }}> person </i>
                     <div className="left">
                         <span

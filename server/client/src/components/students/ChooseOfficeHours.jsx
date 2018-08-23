@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { reduxForm, Field } from 'redux-form';
 import * as actions from '../../actions';
 import { JOIN_QUEUE, SEE_QUEUE } from '../../constants';
-import OfficeHourFormField from '../office_hours/OfficeHourFormField';
+import OfficeHourFormField from '../TAs/OfficeHourFormField';
 
 const ChooseOfficeHours = ({ studentName, officeHoursList, selectedOH, updateStudentChoiceOfOh, updateStudentGoal,
     selectedStudentAction, performStudentAction, fetchOfficeHoursList, currentStudent, studentAction, topics, history }) => {

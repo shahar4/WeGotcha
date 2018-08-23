@@ -7,6 +7,7 @@ const userSchema = new Schema({
   name: { familyName: String, givenName: String },
   uni: String,
   officeHoursJoined: { course_name: String, array_location: Number },
+  officeHoursCreated: { oh_id: String }
 });
 
 mongoose.model('users', userSchema);

@@ -2,61 +2,35 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
+import QueueListItems from './QueueListItem';
+import { studentsAnsweredDivStyle, topListTextStyle } from '../../constants';
 
-class ManageOfficeHours extends Component {
-    render() {
-        let lineIsAt = 0;
-        const listItems = this.props.course.queue.map(student => {
-            const backgroundColor = lineIsAt < this.props.course.next_in_line ? '#F8F8F8' : '#FFFFFF';
-            lineIsAt += 1;
-            return (
-                <li className="collection-item avatar" key={student._id} style={{ backgroundColor: backgroundColor}}>
-                    <i className="material-icons circle" style={{ backgroundColor: '#C4D8E2', fontSize:'30px' }}> person </i>
-                    <div className="left">
-                        <span 
-                            className="left title" 
-                            style={{ color: '#C4D8E2', fontWeight: 'bold' }}
-                        >
-                        {student.student_name} 
-                        </span>
-                        <br/>
-                        <span 
-                            className="left" 
-                            style={{ fontWeight: 'bold' }}
-                        > 
-                        UNI: sk4120 
-                        </span>
-                        <br/>
-                        <span 
-                            className="left" 
-                            style={{ fontWeight: 'bold' }}
-                        > {student.topics ? 'Topics: ' + student.topics : ''} 
-                        </span>
-                    </div>
-                    <div className="secondary-content">
-                        <a 
-                            onClick={() => console.log(student)} //this.props.removeStudentFromQueue(this.props.courseName, student._id)
-                            style={{ color: '#C4D8E2', cursor: 'pointer'}}>
-                            <i className="material-icons">delete</i>
-                        </a>
-                        <br/>
-                        <a
-                            onClick={() => this.props.updateQueueStatus(this.props.course)} 
-                            style={{ color: '#C4D8E2', cursor: 'pointer' }}>
-                            <i className="material-icons">done</i>
-                        </a>
-                    </div>
-                </li>
-            )}
-        );
+const ManageOfficeHours = ({ course, displayAnsweredStudents, changeDisplayInTaQueue }) => {
+        const howManyInLine = course ? course.queue.length - course.next_in_line : 0;
+        const displayText = displayAnsweredStudents ? 'Hide them' : 'Show them';
+
+        let height = course ? course.queue.length < 6 || (howManyInLine < 6 && !displayAnsweredStudents) ? 'autu' : '534px' : 'auto';
+        const ulStyle = { height, overflow: 'scroll', width: '600px', marginTop: '30px', marginRight: 'auto', marginLeft: 'auto' };
+
         return (
-            <ul className="collection" style={{ height: '534px', overflow: 'scroll'}}>
-                {this.props.course.queue.length === 0 &&
-                    <h4>Nobody signed up yet. <br/> We're sure they will come pouring!</h4> }
-                {listItems}
+            <ul className="collection" style={ulStyle}>
+                <div style={{ height: '30px', backgroundColor: '#e1ebf0' }}>
+                    <span className="left" style={studentsAnsweredDivStyle}>
+                        {course ? course.next_in_line : 0} answered!
+                        </span>
+                    <a className="right" style={topListTextStyle} onClick={() => changeDisplayInTaQueue()}>
+                        {displayText}
+                    </a>
+                </div>
+                {course.queue.length === 0 &&
+                    <h4>Nobody signed up yet.</h4>
+                }
+                <QueueListItems 
+                    course={course}
+                    displayAnsweredStudents={displayAnsweredStudents}
+                />
             </ul>
         );
-    }
 }
 
 function mapStateToProps(state) {
@@ -68,7 +42,8 @@ function mapStateToProps(state) {
     })
 
     return {
-        course: chosenOh
+        course: chosenOh,
+        displayAnsweredStudents: state.ta.queue.displayAnsweredStudentsInQueue,
     };
 }
 

@@ -12,7 +12,7 @@ class NewOfficeHours extends Component {
         return (
             this.state.showOfficeHoursFormReview ? 
                 <OfficeHoursFormReview onReviewBack={() => this.setState({ showOfficeHoursFormReview: false })}/> : 
-                <OfficeHoursForm onFormSubmit={() => this.setState({ showOfficeHoursFormReview: true })}/>
+                <OfficeHoursForm submitNewOhValues={() => this.setState({ showOfficeHoursFormReview: true })}/>
         );
     }
 }

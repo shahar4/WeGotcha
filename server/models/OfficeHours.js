@@ -4,8 +4,9 @@ const { Schema } = mongoose;
 const officeHourSchema = new Schema({
     course_name: String,
     ta: { name: String, googleId: String },
-    date: { type: Date, default: Date.now },
-    times: String,
+    date: String,
+    start_time: String,
+    end_time: String,
     location: String,
     notes: String,
     queue: [{ student_name: String, topics: String, studentGoogleId: String }],

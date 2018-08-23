@@ -9,25 +9,31 @@ const OfficeHours = mongoose.model('officeHours');
 const User = mongoose.model('users');
 
 module.exports = app => {     
-    app.post('/api/office_hours', requireLogin, async (req, res) => { //requireLogin is passed in and called as a middleware
-        const { course_name, times, location, notes, ta } = req.body;
-        const officeHours = new OfficeHours({ course_name, times, location, notes, ta });
+    app.post('/api/office_hours/create', requireLogin, async (req, res) => { //requireLogin is passed in and called as a middleware
+        const { course_name, date, start_time, end_time, location, notes, ta } = req.body;
+        const newOfficeHours = new OfficeHours({ course_name, date, start_time, end_time, location, notes, ta });
+
+        const user = await User.findOne({ googleId: ta.googleId });
+        user.officeHoursCreated = { oh_id: newOfficeHours._id };
 
         try {
-            await officeHours.save();
+            await newOfficeHours.save();
+            await user.save();
         } 
         catch(err) {
             res.status(422).send(err);
         }
         
         const list = await OfficeHours.find();
-        res.send(list);
+        res.send({ list: list, newOfficeHours: newOfficeHours });
     });
+
 
     app.get('/api/get_office_hours_list', async (req, res) => {
         const list = await OfficeHours.find();
         res.send(list);
     });
+
 
     app.post('/api/student_join_queue', requireLogin, async (req, res) => {
         //TODO: make it so you only register for a queue in that same date (and only 15 mins before OH have started)
@@ -50,6 +56,7 @@ module.exports = app => {
         req.body.arrayLocation = officeHours.__v;
         res.send(req.body);
     });
+
 
     app.get('/api/place_in_line', async (req, res) => {
         const { courseName } = req.body;

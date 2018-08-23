@@ -5,6 +5,7 @@ import * as actions from '../../actions';
 import QueueListItems from './QueueListItems';
 import UnderQueueJoined from './UnderQueueJoined';
 import UnderQueueViewing from './UnderQueueViewing';
+import { studentsAnsweredDivStyle, topListTextStyle } from '../../constants';
 
 class ManageOfficeHours extends Component {    
     render() {
@@ -15,11 +16,7 @@ class ManageOfficeHours extends Component {
         if (this.props.course) {
             height = this.props.course.queue.length < 6 || (howManyInLine < 6 && !this.props.displayAnsweredStudents) ? 'autu' : '534px';
         }
-
-        //STYLES
         const ulStyle = { height, overflow: 'scroll', width: '60%', marginTop: '30px', marginRight: 'auto', marginLeft: 'auto' };
-        const studentsAnsweredDivStyle = { color: '#FFFFFF', fontWeight: 'bold', marginTop: '5px', marginLeft: '5px' };
-        const topListTextStyle = { fontWeight: 'bold', marginTop: '5px', marginRight: '5px' };
 
         return (
             <div>

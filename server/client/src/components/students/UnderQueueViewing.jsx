@@ -4,7 +4,7 @@ import { JOIN_QUEUE } from '../../constants';
 import { reduxForm, Field } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
-import OfficeHourFormField from '../office_hours/OfficeHourFormField';
+import OfficeHourFormField from '../TAs/OfficeHourFormField';
 
 const UnderQueueViewing = ({ updateStudentGoal, studentAction, howManyInLine, minsPerQuestion, selectedOH, officeHoursList, courseName, 
     studentIdInQueue, removeStudentFromQueue, fetchOfficeHoursList, performStudentAction }) => {

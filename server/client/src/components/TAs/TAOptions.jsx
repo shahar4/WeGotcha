@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const buttonStyle = { width: '290px', backgroundColor: '#C4D8E2', marginRight: '10px', marginBottom: '10px', fontSize:'1.23em' };
 
-class ChooseHat extends Component {
+class TaOptions extends Component {
     render() {
         return (
             <div className="container center-align" style={{ marginTop: '120px', color: '#9e9e9e', width: '660px' }}>
@@ -46,4 +46,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, null)(ChooseHat);
+export default connect(mapStateToProps, null)(TaOptions);

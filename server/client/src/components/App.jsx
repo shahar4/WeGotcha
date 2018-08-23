@@ -5,10 +5,10 @@ import * as actions from '../actions';
 
 import Header from './Header';
 import ChooseHat from './ChooseHat';
-import NewOfficeHours from './office_hours/NewOfficeHours';
-import OfficeHoursCreated from './office_hours/OfficeHoursCreated';
+import NewOfficeHours from './TAs/NewOfficeHours';
+import OfficeHoursCreated from './TAs/OfficeHoursCreated';
 import ChooseOfficeHours from './students/ChooseOfficeHours';
-import TAOptions from './TAs/TAOptions';
+import TaOptions from './TAs/TaOptions';
 import ManageOfficeHours from './TAs/ManageOfficeHours';
 import ShowQueue from './students/ShowQueue';
 
@@ -32,7 +32,7 @@ class App extends Component {
             <Route exact path="/office_hours/created" component={OfficeHoursCreated} />
             <Route exact path="/students/choose_office_hours" component={ChooseOfficeHours} />
             <Route exact path="/students/see_queue" component={ShowQueue} />
-            <Route exact path="/ta/options" component={TAOptions} />
+            <Route exact path="/ta/options" component={TaOptions} />
             <Route exact path="/ta/office_hours/manage" component={ManageOfficeHours} />
           </div>
         </BrowserRouter>
