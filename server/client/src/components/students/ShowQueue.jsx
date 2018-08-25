@@ -6,6 +6,7 @@ import QueueListItems from './QueueListItems';
 import UnderQueueJoined from './UnderQueueJoined';
 import UnderQueueViewing from './UnderQueueViewing';
 import { studentsAnsweredDivStyle, topListTextStyle } from '../../constants';
+import QueueTitle from '../commons/QueueTitle';
 
 class ManageOfficeHours extends Component {    
     render() {
@@ -16,10 +17,15 @@ class ManageOfficeHours extends Component {
         if (this.props.course) {
             height = this.props.course.queue.length < 6 || (howManyInLine < 6 && !this.props.displayAnsweredStudents) ? 'autu' : '534px';
         }
-        const ulStyle = { height, overflow: 'scroll', width: '60%', marginTop: '30px', marginRight: 'auto', marginLeft: 'auto' };
+        const ulStyle = { height, overflow: 'scroll', width: '600px', marginTop: '30px', marginRight: 'auto', marginLeft: 'auto' };
 
         return (
             <div>
+                <div className="container center" style={{marginTop:'30px'}}>
+                    <QueueTitle 
+                        course={this.props.course}
+                    />
+                </div>
                 <ul className="collection" style={ulStyle}>
                     <div style={{ height:'30px', backgroundColor: '#e1ebf0' }}>
                         <span className="left" style={studentsAnsweredDivStyle}>
@@ -30,7 +36,7 @@ class ManageOfficeHours extends Component {
                         </a>
                     </div>
                     {this.props.course ? this.props.course.queue.length === 0 &&
-                        <h5>Nobody signed up yet. <br /> Don't worry... they'll come!</h5> : ''
+                        <h5>The queue is empty</h5> : ''
                     }
                     <QueueListItems 
                         course={this.props.course}
@@ -42,7 +48,7 @@ class ManageOfficeHours extends Component {
                         howManyInLine={howManyInLine}
                         minsPerQuestion={5}
                         studentIdInQueue={this.props.studentIdInQueue}
-                        courseName={this.props.course ? this.props.course.course_name : ''}
+                        courseId={this.props.course ? this.props.course._id : ''}
                         removeStudentFromQueue={this.props.removeStudentFromQueue}
                         fetchOfficeHoursList={this.props.fetchOfficeHoursList}
                         />

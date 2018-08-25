@@ -4,15 +4,25 @@ import ChooseOHToManage from './ChooseOHToManage';
 import ShowAndManageQueue from './ShowAndManageQueue';
 
 class ManageOfficeHours extends Component {
+    state = {
+        whatToShow: 'chooseOh',
+    };
+
+    switchTaManagingPageView = selection => {
+        this.setState(
+            { whatToShow: selection }
+        );
+    };
+
     render() {
-        const marginTop = this.props.whatToShow === 'chooseOh' ? '100px' : '40px';
+        const marginTop = this.state.whatToShow === 'chooseOh' ? '100px' : '40px';
         return (
             <div className="container center-align" style={{ marginTop, color: '#9e9e9e', width: '660px' }}>
                 {
-                    this.props.whatToShow === 'chooseOh' && <ChooseOHToManage />
+                    this.state.whatToShow === 'chooseOh' && <ChooseOHToManage switchTaManagingPageView={this.switchTaManagingPageView}/>
                 }
                 {
-                    this.props.whatToShow === 'showQueue' && <ShowAndManageQueue />
+                    this.state.whatToShow === 'showQueue' && <ShowAndManageQueue switchTaManagingPageView={this.switchTaManagingPageView}/>
                 }
             </div>
         )
@@ -21,8 +31,7 @@ class ManageOfficeHours extends Component {
 
 function mapStateToProps(state) {
     return {
-        activeTA: state.activeUser ? state.activeUser.name.givenName : '',
-        whatToShow: state.showInTaManagePage
+        activeTA: state.activeUser.name.givenName,
     };
 }
 

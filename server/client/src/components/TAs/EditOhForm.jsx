@@ -3,7 +3,7 @@ import * as actions from '../../actions';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FORM_FIELDS, PICKER_FIELDS } from '../../constants';
+import { FORM_FIELDS, PICKER_FIELDS, MANAGE } from '../../constants';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -13,22 +13,13 @@ const styles = theme => ({
     textField: { marginLeft: theme.spacing.unit, marginRight: theme.spacing.unit, width: 420, },
 });
 
-class OfficeHoursForm extends Component {
+class EditOhForm extends Component {
     state = {
         validation: {
             course_name: '',
             location: '',
             date: '',
-        },
-        isTooltipOpen: false,
-    };
-
-    handleTooltipClose = () => {
-        this.setState({ open: false });
-    };
-
-    handleTooltipOpen = () => {
-        this.setState({ open: true });
+        }
     };
 
     renderFormFields() {
@@ -39,9 +30,9 @@ class OfficeHoursForm extends Component {
                         <label> {field.label} </label>
                         <input
                             value={this.props[field.name]}
-                            onChange={(text) => this.props.updateNewOhValues(text.target.value, field.name)} 
-                            style={{ marginBottom: '5px', marginTop:'-15px' }} 
-                            placeholder={field.placeholder} 
+                            onChange={(text) => this.props.updateNewOhValues(text.target.value, field.name)}
+                            style={{ marginBottom: '5px', marginTop: '-15px' }}
+                            placeholder={field.placeholder}
                         />
                         <div className="red-text" >
                             {this.state.validation[field.name]}
@@ -50,27 +41,11 @@ class OfficeHoursForm extends Component {
                 );
             })
         );
-    }    
+    }
     renderPickerFields() {
         return (
             _.map(PICKER_FIELDS, field => {
-                return field.name === 'startTime' ? (
-                    <Tooltip
-                        key={field.name}
-                        onClose={this.handleTooltipClose}
-                        onOpen={this.handleTooltipOpen}
-                        open={this.state.open}
-                        title="Queue registration will ve enabled 10 minutes prior to start time."
-                        placement="top-start"
-                    >
-                        <TextField
-                            style={{ marginRight: field.marginRight }}
-                            label={field.label}
-                            type={field.type}
-                            defaultValue={field.defaultValue}
-                            onChange={value => this.props.updateNewOhValues(value.target.value, field.name)}
-                        />
-                    </Tooltip> ) : (
+                return (
                     <TextField
                         key={field.name}
                         style={{ marginRight: field.marginRight }}
@@ -79,12 +54,12 @@ class OfficeHoursForm extends Component {
                         defaultValue={field.defaultValue}
                         onChange={value => this.props.updateNewOhValues(value.target.value, field.name)}
                     />
-                    );
+                );
             })
         );
-    }    
+    }
     render() {
-        const validateAndAdvanceToReview = () => {
+        const validateAndSubmit = () => {
             let today = new Date().setHours(0, 0, 0, 0);
             let ohDate = new Date(this.props.date).setHours(0, 0, 0, 0);
             this.setState({
@@ -95,18 +70,19 @@ class OfficeHoursForm extends Component {
                 }
             });
             if (this.props.course_name && this.props.location && today <= ohDate) {
-                this.props.submitNewOhValues();
+                this.props.submitEditedOh(this.props);
+                this.props.updateTAGoalInQueue(MANAGE);
             }
         }
         return (
-            <div>
-                <div className="container center-align" style={{ marginTop: '90px', width:'390px' }}>
+            <div style={{marginBottom:'120px'}}>
+                <div className="container center-align" style={{ marginTop: '60px', width: '390px' }}>
                     <div style={{ fontSize: '1rem' }}>
                         {this.renderFormFields()}
                     </div>
                 </div>
                 <div className="container center-align">
-                    <div style={{marginBottom:'30px'}}>
+                    <div style={{ marginBottom: '30px' }}>
                         {this.renderPickerFields()}
                         <div className="red-text" >
                             {this.state.validation['date']}
@@ -114,17 +90,21 @@ class OfficeHoursForm extends Component {
                     </div>
                     <div className="container center-align" style={{ marginTop: '40px', width: '390px' }}>
                         <button
-                            onClick={validateAndAdvanceToReview}
-                            className="btn-flat white-text right" 
-                            style={{backgroundColor: '#C4D8E2', width: '170px' }}
-                        > 
-                            NEXT
+                            onClick={validateAndSubmit}
+                            className="btn-flat white-text right"
+                            style={{ backgroundColor: '#C4D8E2', width: '170px' }}
+                        >
+                            SUBMIT
                             <i className="material-icons right">done</i>
                         </button>
-                        <Link to={'/chooseHat'} className="red btn-flat white-text left" style={{ width: '170px'}}>
+                        <button 
+                            onClick={()=>console.log('canceling')}
+                            className="red btn-flat white-text left"
+                            style={{ width: '170px' }}
+                        >
                             CANCEL
                             <i className="material-icons right">cancel</i>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -140,8 +120,8 @@ function mapStateToProps(state) {
         date: state.ta.ohFormValues.date,
         start_time: state.ta.ohFormValues.start_time,
         end_time: state.ta.ohFormValues.end_time,
+        _id: state.ta.ohFormValues._id,
     };
 }
 
-export default withStyles(styles)(connect(mapStateToProps, actions)(OfficeHoursForm));
-
+export default withStyles(styles)(connect(mapStateToProps, actions)(EditOhForm));

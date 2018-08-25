@@ -25,14 +25,14 @@ const UnderQueueViewing = ({ updateStudentGoal, studentAction, howManyInLine, mi
 
     return (
         <div className="center">
-            <h5 style={{ color: '#9e9e9e' }}>
+            <p style={{ color:'#9e9e9e', fontSize:'18px', marginBottom:'20px' }}>
                 {firstLineFirstWords} <b>{howManyInLine} {studentOrStudents} in line</b> right now and your TA is imparting
                 <br />
                 knowledge at a staggering pace of <b>{minsPerQuestion} per question.</b>
                 <br />
                 <br />
                 Estimated wait time: {howManyInLine * minsPerQuestion} minutes.
-            </h5>
+            </p>
             <br />
             <button
                 className="waves-effect waves-light btn-large"

@@ -46,17 +46,17 @@ const OfficeHoursFormReview = ({ ohValues, onReviewBack, createNewOh, history })
 function mapStateToProps(state) {
     return {
         ohValues: {
-            course_name: state.newOh.course_name,
-            date: state.newOh.date,
-            start_time: state.newOh.start_time,
-            end_time: state.newOh.end_time,
-            location: state.newOh.location,
-            notes: state.newOh.notes,
+            course_name: state.ta.ohFormValues.course_name,
+            date: state.ta.ohFormValues.date,
+            start_time: state.ta.ohFormValues.start_time,
+            end_time: state.ta.ohFormValues.end_time,
+            location: state.ta.ohFormValues.location,
+            notes: state.ta.ohFormValues.notes,
             ta: {
                 name: state.activeUser ? state.activeUser.name.givenName + ' ' + state.activeUser.name.familyName : '',
                 googleId: state.activeUser ? state.activeUser.googleId : '',
             },
-            times: state.newOh.start_time + ' - ' + state.newOh.end_time,
+            times: state.ta.ohFormValues.start_time + ' - ' + state.ta.ohFormValues.end_time,
         },
     }; 
 }

@@ -68,10 +68,6 @@ export const updateTaManageOhChoice = choice => {
 };
 
 
-export const switchTaManagingPageView = () => {
-    return { type: actionTypes.SWITCH_TA_MANAGING_PAGE_VIEW,};
-};
-
 //Take course_name and update the advancement status of the queue
 export const updateQueueStatus = course => async dispatch => {
     const res = await axios.post('/api/office_hours/update_status', course);
@@ -115,8 +111,8 @@ export const setUserHat = (hat, didJoinOh, history) => {
 
 
 //Takes in student's id and course id, removes students from DB and changes the state
-export const removeStudentFromQueue = (courseName, studentIdInQueue) => async dispatch => {
-    const values = { courseName, studentIdInQueue };
+export const removeStudentFromQueue = (courseId, studentId) => async dispatch => {
+    const values = { courseId, studentId };
     const res = await axios.post('/api/office_hours/remove_student_from_queue', values);
 
     dispatch({ type: actionTypes.REMOVE_STUDENT_FROM_QUEUE, payload: res.data });
@@ -149,4 +145,32 @@ export const updateNewOhValues = (value, whichDetail) => {
         }
     }
     
+};
+
+
+//SWITCH STATE THAT DETERMINES SHOW OR HIDE OF ANSWERWED STUDENTS IN TA'S QUEUE
+export const updateTaScheduledOhForSelectors = list => {
+    return { type: actionTypes.UPDATE_TA_SCHEDULED_OH_LIST_SELECTORS, payload: list };
+};
+
+
+//TAKES THE RELEVANT OH'S FORM VALUES FROM THE OHLIST AND UPDATES THE FORMVALUES IN TA STATE
+export const updateOhFormValuesForEdit = ohFormValues => {
+    return { type: actionTypes.UPDATE_OH_FORM_VALUES_FOR_EDIT, payload: ohFormValues };
+};
+
+
+// TAKE THE NEW OH VALS, SAVE IN DB AND TRANSMIT TO ALL STATES
+export const submitEditedOh = values => async dispatch => {
+    const res = await axios.post('/api/office_hours/update_edited_oh', values);
+
+    dispatch({ type: actionTypes.SUBMIT_EDITED_OH, payload: res.data });//UPDATE THE STATE
+};
+
+
+// TAKE THE NEW TOPICS VALS, SAVE IN DB AND TRANSMIT TO ALL STATES
+export const submitEditedTopics = values => async dispatch => {
+    const res = await axios.post('/api/student/update_edited_topics', values);
+
+    dispatch({ type: actionTypes.UPDATE_EDITED_TOPICS, payload: res.data });//UPDATE THE STATE
 };

@@ -39,3 +39,9 @@ export const PICKER_FIELDS = [
 //STYLES FOR BOTH TA & STUDENT QUEUES
 export const studentsAnsweredDivStyle = { color: '#FFFFFF', fontWeight: 'bold', marginTop: '5px', marginLeft: '5px' };
 export const topListTextStyle = { fontWeight: 'bold', marginTop: '5px', marginRight: '5px' };
+
+
+//TA GOALS IN QUEUE
+export const MANAGE = 'manage';
+export const SEE_OTHER_QUEUES = 'see_other_queues';
+export const EDIT = 'edit';

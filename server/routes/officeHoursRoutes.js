@@ -36,13 +36,16 @@ module.exports = app => {
 
 
     app.post('/api/student_join_queue', requireLogin, async (req, res) => {
-        //TODO: make it so you only register for a queue in that same date (and only 15 mins before OH have started)
         const { studentName, courseName, studentGoogleId, topics } = req.body;
+        const user = await User.findOne({ googleId: studentGoogleId });
+        
+        if(user.officeHoursJoined.course_name) {
+            res.send("You cannot register to more than one office hours at the same time.")
+        }
 
         const officeHours = await OfficeHours.findOne({ course_name: courseName });
         officeHours.queue.push({ student_name: studentName, studentGoogleId: studentGoogleId, topics: topics });
 
-        const user = await User.findOne({ googleId: studentGoogleId });
         user.officeHoursJoined = { course_name: courseName, array_location: officeHours.queue.length-1};
 
         try {
@@ -76,16 +79,16 @@ module.exports = app => {
          *** 1. REMOVE HIM FROM THE OH.QUEUE IN THE DB
          *** 2. FOR ALL THE ONES AFTER HIM: UPDATE THEIR ARRAY_LOCATION
          */
-        const { courseName, studentIdInQueue } = req.body;
+        const { courseId, studentId } = req.body;
 
-        const officeHours = await OfficeHours.findOne({ course_name: courseName });
+        const officeHours = await OfficeHours.findOne({ _id: courseId });
         const queue = officeHours.queue;
 
         let i;
         let itemFound = false;
         //TODO: EDGE CASE FOR WHEN THE QUEUE ONLY HAS ONE USER --> I<QUEUE.LENGTH TODO://
         for(i=0; i<queue.length-1; i++) {
-            if (queue[i].studentGoogleId === studentIdInQueue) {
+            if (queue[i].studentGoogleId === studentId) {
                 itemFound = true;
             }
             if (itemFound) {
@@ -96,7 +99,7 @@ module.exports = app => {
         //TODO: MAKE SURE THAT ONLY PEOPLE WHO ARE IN THE QUEUE CAN SEE THE LEAVE QUEUE BUTTON TODO://
         officeHours.queue.pop();
 
-        const user = await User.findOne({ googleId: studentIdInQueue });
+        const user = await User.findOne({ googleId: studentId });
         user.officeHoursJoined = {};
 
         try { await officeHours.save(); await user.save(); }
@@ -127,4 +130,53 @@ module.exports = app => {
     app.get('/api/student/fetch_oh_joind', (req, res) => {
         res.send(req.user.officeHoursJoined);
     });
+
+    app.post('/api/office_hours/update_edited_oh', requireLogin, async (req, res) => {
+        const { course_name, date, start_time, end_time, location, notes, _id } = req.body;
+        const editedOfficeHours = await OfficeHours.findOne({ _id: _id });
+
+        editedOfficeHours.course_name = course_name;
+        editedOfficeHours.date = date;
+        editedOfficeHours.start_time = start_time;
+        editedOfficeHours.end_time = end_time;
+        editedOfficeHours.location = location;
+        editedOfficeHours.notes = notes;
+
+        try {
+            await editedOfficeHours.save();
+        } 
+        catch(err) {
+            res.status(422).send(err);
+        }
+        
+        const list = await OfficeHours.find();
+        res.send({ list: list, newOfficeHours: editedOfficeHours });
+    });
+
+
+    app.post('/api/student/update_edited_topics', requireLogin, async (req, res) => {
+        const { studentIdInQueue, courseId, newTopics } = req.body;
+        const editedOfficeHours = await OfficeHours.findOne({ _id: courseId });
+
+        let queue = editedOfficeHours.queue;
+        for (i = 0; i < queue.length; i++) {
+            if (queue[i].studentGoogleId === studentIdInQueue) {
+                queue[i].topics = newTopics;
+            }
+        }
+        editedOfficeHours.queue = queue;
+
+        try {
+            await editedOfficeHours.save();
+        } 
+        catch(err) {
+            res.status(422).send(err);
+        }
+        
+        const list = await OfficeHours.find();
+        res.send({ list: list });
+    });
+
+
 };
+

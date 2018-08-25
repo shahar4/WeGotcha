@@ -1,7 +1,8 @@
 //TODO: REFACTOR & MAKE THIS PAGE FIT OH WITH ZERO STUDENTS IN QUEUE (SO THE INCOMING STUDENT IS FIRST IN LINE)
 import React from 'react';
+import EditTopicsInQueue from './EditTopicsInQueue';
 
-const UnderQueueJoined = ({ howManyInLine, minsPerQuestion, courseName, studentIdInQueue, removeStudentFromQueue, fetchOfficeHoursList }) => {
+const UnderQueueJoined = ({ howManyInLine, minsPerQuestion, courseId, studentIdInQueue, removeStudentFromQueue, fetchOfficeHoursList }) => {
     //ADJUST WORDINGS TO QUEUE STATUS I.E. (SINGULAR VS PLURAL...)
     let firstLineFirstWords; let studentOrStudents;
     if (howManyInLine > 1 ) { firstLineFirstWords = 'There are'; studentOrStudents = 'students'; }
@@ -9,30 +10,32 @@ const UnderQueueJoined = ({ howManyInLine, minsPerQuestion, courseName, studentI
 
     return (
         <div style={{ textAlign:'center' }}>
-            <h5 style={{ color:'#9e9e9e' }}>
+            <p style={{ color:'#9e9e9e', fontSize:'18px', marginBottom:'20px' }}>
                 {firstLineFirstWords} <b>{howManyInLine} {studentOrStudents} in line</b> right now and your TA is imparting
                 <br/>
                 knowledge at a staggering pace of <b>{minsPerQuestion} per question.</b>
                 <br/>
                 <br/>
                 Estimated wait time: {howManyInLine * minsPerQuestion} minutes.
-            </h5>
+            </p>
             <br/>
             <div>
                 <button
                     className="center waves-effect waves-light btn-large" 
-                    style={{ width: '250px', backgroundColor: '#C4D8E2', fontSize: '1.23em', marginRight: '5px',}}
+                    style={{ display: 'inline', width: '250px', backgroundColor: '#C4D8E2', fontSize: '1.23em', marginRight: '5px',}}
                     onClick={() => {
-                        removeStudentFromQueue(courseName, studentIdInQueue);
+                        removeStudentFromQueue(courseId, studentIdInQueue);
                         fetchOfficeHoursList();
                         }}
                 >Leave Queue
                 </button>
-                <button 
-                    className="center waves-effect waves-light btn-large" 
-                    style={{ width: '250px', backgroundColor: '#C4D8E2', fontSize: '1.23em', marginLeft: '5px'}}
-                >Edit topics
-                </button>
+                <EditTopicsInQueue
+                    modalWidth='auto'
+                    buttonName='Edit topics'
+                    body='editTopics'
+                    courseId={courseId}
+                    studentIdInQueue={studentIdInQueue}
+                />
             </div>
             <div>
                 <button

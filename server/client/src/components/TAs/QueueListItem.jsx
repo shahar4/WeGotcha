@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
-const QueueListItems = ({ course, displayAnsweredStudents, updateQueueStatus }) => {
+const QueueListItems = ({ course, displayAnsweredStudents, updateQueueStatus, removeStudentFromQueue, fetchOfficeHoursList }) => {
     let lineIsAt = 0;
     const listItems = course ? course.queue.map(student => {
         const backgroundColor = lineIsAt < course.next_in_line ? '#F8F8F8' : '#FFFFFF';
@@ -37,7 +37,10 @@ const QueueListItems = ({ course, displayAnsweredStudents, updateQueueStatus }) 
                     </div>
                     <div className="secondary-content">
                         <a
-                            onClick={() => console.log(student)} //this.props.removeStudentFromQueue(this.props.courseName, student._id)
+                            onClick={() => {
+                                removeStudentFromQueue(course._id, student.studentGoogleId);
+                                fetchOfficeHoursList();
+                            }}
                             style={{ color: '#C4D8E2', cursor: 'pointer' }}>
                             <i className="material-icons">delete</i>
                         </a>

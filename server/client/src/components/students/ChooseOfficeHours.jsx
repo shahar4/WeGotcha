@@ -7,14 +7,24 @@ import { reduxForm, Field } from 'redux-form';
 import * as actions from '../../actions';
 import { JOIN_QUEUE, SEE_QUEUE } from '../../constants';
 import OfficeHourFormField from '../TAs/OfficeHourFormField';
+import * as moment from 'moment';
 
 const ChooseOfficeHours = ({ studentName, officeHoursList, selectedOH, updateStudentChoiceOfOh, updateStudentGoal,
     selectedStudentAction, performStudentAction, fetchOfficeHoursList, currentStudent, studentAction, topics, history }) => {
         
-    const officeHoursOptions = _.map(officeHoursList, course => {
-        return (
-            { value: course.course_name, label: course.course_name }
-        );
+    let officeHoursOptions = [];
+    
+    _.forEach(officeHoursList, course => {
+        let today = moment();
+        let endTimeHours = parseInt(course.end_time.split(':')[0]) + 1;
+
+        if ( moment(course.date).format("MMM Do YY") === today.format("MMM Do YY") && 
+            endTimeHours >= parseInt(moment().format("hh")) ) {
+
+            officeHoursOptions.push (
+                { value: course.course_name, label: course.course_name }
+            );
+        }
     });
     
     const doWhatOptions = [
@@ -43,6 +53,7 @@ const ChooseOfficeHours = ({ studentName, officeHoursList, selectedOH, updateStu
                         value={selectedOH}
                         onChange={selection => updateStudentChoiceOfOh(selection)}
                         options={officeHoursOptions}
+                        placeholder={"Select from today's OHs..."}
                     />
                 </div>
                 <h5 style={{ color: '#9e9e9e' }}> What do you want to do with them? </h5>

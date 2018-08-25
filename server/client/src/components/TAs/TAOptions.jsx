@@ -27,12 +27,6 @@ class TaOptions extends Component {
                             style={buttonStyle}>
                             MANAGE OFFICE HOURS
                         </Link>
-                        <Link
-                            to={'/office_hours/new'}
-                            className="waves-effect waves-light btn-large center"
-                            style={buttonStyle}>
-                            EDIT OFFICE HOURS
-                        </Link>
                     </div>
                 </div>
             </div>

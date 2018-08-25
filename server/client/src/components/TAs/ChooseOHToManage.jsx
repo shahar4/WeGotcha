@@ -16,28 +16,28 @@ class ChooseOHToManage extends Component {
         })
 
         _.forEach(taOfficeHoursList, OH => {
-            taOhOptions.push({ value: OH.course_name, label: OH.course_name })
+            taOhOptions.push({ value: OH._id, label: OH.course_name })
         })
-
+        this.props.updateTaScheduledOhForSelectors(taOhOptions);
+        
         return (
             <div className="container center" style={{ width: '420px', marginTop: '60px', }}>
                 <h5 style={{ color: '#9e9e9e', marginBottom: '40px' }}> Choose your office hours: </h5>
-                    <div style={{ marginBottom: '40px' }}>
-                        <Select
-                            value={this.props.value}
-                            onChange={selection => this.props.updateTaManageOhChoice(selection)}
-                            options={taOhOptions}
-                            //TODO: SET NO VALUE OPTIONS FOR 'YOU DIDN'T SET OH YET
-                        />
-                    </div>
-                    <button 
-                        className="btn-flat white-text center"
-                        style={{ backgroundColor: '#C4D8E2', width: '200px', fontSize: '1.23em'}}
-                        onClick={() => this.props.switchTaManagingPageView()}
-                    >
-                        MANAGE
-                        <i className="material-icons right">work</i>
-                    </button>
+                <div style={{ marginBottom: '40px' }}>
+                    <Select
+                        onChange={selection => this.props.updateTaManageOhChoice(selection)}
+                        options={taOhOptions}
+                        noOptionsMessage={() => "You have no scheduled office hours"}
+                    />
+                </div>
+                <button 
+                    className="btn-flat white-text center"
+                    style={{ backgroundColor: '#C4D8E2', width: '200px', fontSize: '1.23em'}}
+                    onClick={() => this.props.switchTaManagingPageView('showQueue')}
+                >
+                MANAGE
+                    <i className="material-icons right">work</i>
+                </button>
             </div>
         )
     }
@@ -47,7 +47,7 @@ function mapStateToProps(state) {
     return {
         allOficeHours: state.officeHoursList || '',
         activeTaId: state.activeUser ? state.activeUser.googleId : '',
-        taManageOhChoice: state.taManageOhChoice || '',
+        taManageOhChoice: state.ta.queue.ManageOhChoice,
     };
 }
 
